@@ -1,0 +1,53 @@
+import requests
+import time
+
+# Sample Threat Intelligence Feed URL (replace with actual feeds)
+THREAT_FEED_URL = "https://some-threat-feed.com/api/latest"
+
+# Function to fetch real-time threat intelligence
+def fetch_threat_intelligence():
+    try:
+        response = requests.get(THREAT_FEED_URL)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print("Failed to fetch threat data.")
+            return None
+    except Exception as e:
+        print(f"Error fetching threat intelligence: {e}")
+        return None
+
+# Function to check if an IP is in the threat intelligence feed
+def is_ip_threat(ip_address, threat_data):
+    if not threat_data:
+        return False
+    return ip_address in threat_data.get("malicious_ips", [])
+
+# Function to check if a domain is in the threat intelligence feed
+def is_domain_threat(domain, threat_data):
+    if not threat_data:
+        return False
+    return domain in threat_data.get("malicious_domains", [])
+
+# Simulated real-time security monitoring
+def real_time_monitoring():
+    threat_data = fetch_threat_intelligence()
+    
+    # Example IP and domain to check
+    suspicious_ip = "192.168.1.10"
+    suspicious_domain = "malicious-site.com"
+    
+    if is_ip_threat(suspicious_ip, threat_data):
+        print(f"ALERT: Suspicious IP detected - {suspicious_ip}")
+    else:
+        print(f"IP {suspicious_ip} is clean.")
+    
+    if is_domain_threat(suspicious_domain, threat_data):
+        print(f"ALERT: Suspicious Domain detected - {suspicious_domain}")
+    else:
+        print(f"Domain {suspicious_domain} is clean.")
+
+if _name_ == "_main_":
+    while True:
+        real_time_monitoring()
+        time.sleep(60)  # Check every 60 seconds
